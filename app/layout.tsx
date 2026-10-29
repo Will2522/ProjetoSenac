@@ -4,6 +4,7 @@ import "./globals.css";
 import Cabecalho from "./componentes/Cabecalho";
 import Rodape from "./componentes/Rodape";
 
+
 export const metadata: Metadata = {
   title: "Dev Portfólio",
   description: "Meu portfólio de programação web",
