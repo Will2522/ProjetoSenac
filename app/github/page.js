@@ -1,10 +1,10 @@
 
 import Image from "next/image";
-import { cacheLife } from "next/cache";
+//import { cacheLife } from "next/cache";
 
 async function buscarRepositorios(usuario) {
-  "use cache";
-  cacheLife("hours");
+ // "use cache";
+ // cacheLife("hours");
 
   try {
     const resposta = await fetch(
