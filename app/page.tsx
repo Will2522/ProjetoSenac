@@ -1,25 +1,30 @@
-import Secao from "./componentes/secao";
-import Paragrafo from "./componentes/paragrafo";
-import Cartao from "./componentes/cartao";
-import { projetos } from "./componentes/dados";
+
+import Secao from "./componentes/Secao";
+import Paragrafo from "./componentes/Paragrafo";
+import Cartao from "./componentes/Cartao";
+import Tarefas from "./componentes/Tarefas";
+import { Projeto } from "./componentes/Dados";
 
 export default function Home() {
   const nome = "Willian Portela Rodrigues";
 
   return (
-    <div className="space-y-8">
-      {/* Apresentação com {nome} */}
-      <Secao titulo="Apresentação">
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 shadow-lg text-slate-300">
-          <h2 className="text-xl font-bold text-cyan-400 mb-2">Olá, eu sou {nome}!</h2>
-          <Paragrafo />
-        </div>
+    <>
+      <section className="hero">
+        <h1>Olá, eu sou {nome}!</h1>
+        <p>Desenvolvedor Web em formação</p>
+      </section>
+
+      <Secao titulo="Sobre mim">
+        <Paragrafo>
+          Sou estudante de Programação Web e desenvolvo
+          aplicações utilizando React e Next.js.
+        </Paragrafo>
       </Secao>
 
-      {/* Seção Meus Projetos */}
       <Secao titulo="Meus Projetos">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {projetos.map((proj) => (
+        <div className="grade">
+          {Projeto.map((proj) => (
             <Cartao
               key={proj.id}
               id={proj.id}
@@ -30,6 +35,10 @@ export default function Home() {
           ))}
         </div>
       </Secao>
-    </div>
+
+      <Secao titulo="Lista de Tarefas">
+        <Tarefas />
+      </Secao>
+    </>
   );
 }

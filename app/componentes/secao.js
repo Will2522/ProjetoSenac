@@ -1,18 +1,8 @@
 
-export default function Secao({
-  titulo,
-  subtitulo,
-  children,
-  id,
-}) {
+export default function Secao({ titulo, children }) {
   return (
-    <section id={id} className="secao">
-      <div className="secao-cabecalho">
-        <span className="etiqueta">EXPLORAR</span>
-        <h2>{titulo}</h2>
-        {subtitulo && <p>{subtitulo}</p>}
-      </div>
-
+    <section className="secao">
+      <h2>{titulo}</h2>
       {children}
     </section>
   );

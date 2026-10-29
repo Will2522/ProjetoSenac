@@ -4,93 +4,59 @@
 import { useState } from "react";
 
 export default function Contato() {
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [mensagem, setMensagem] = useState("");
   const [enviado, setEnviado] = useState(false);
-  const [erro, setErro] = useState("");
 
-  function enviarFormulario(event) {
-    event.preventDefault();
+  function enviar(e) {
+    e.preventDefault();
 
-    const formulario = event.currentTarget;
-
-    if (!formulario.checkValidity()) {
-      formulario.reportValidity();
+    if (!nome.trim() || !email.trim() || !mensagem.trim()) {
+      alert("Preencha todos os campos.");
       return;
     }
 
-    setErro("");
     setEnviado(true);
-    formulario.reset();
-  }
-
-  if (enviado) {
-    return (
-      <div className="mensagem-sucesso">
-        <div className="sucesso-icone">✓</div>
-        <h2>Obrigado pelo contato!</h2>
-        <p>
-          Sua mensagem foi validada. Este formulário é uma
-          demonstração e ainda não envia mensagens para um servidor.
-        </p>
-
-        <button
-          className="botao-principal"
-          onClick={() => setEnviado(false)}
-        >
-          Enviar outra mensagem
-        </button>
-      </div>
-    );
+    setNome("");
+    setEmail("");
+    setMensagem("");
   }
 
   return (
-    <form className="formulario" onSubmit={enviarFormulario}>
-      <label htmlFor="nome">Seu nome</label>
+    <form className="formulario" onSubmit={enviar}>
       <input
-        id="nome"
-        name="nome"
         type="text"
-        placeholder="Como você se chama?"
-        minLength={2}
+        placeholder="Seu nome"
+        value={nome}
+        onChange={(e) => setNome(e.target.value)}
         required
       />
 
-      <label htmlFor="email">Seu e-mail</label>
       <input
-        id="email"
-        name="email"
         type="email"
-        placeholder="voce@exemplo.com"
+        placeholder="Seu e-mail"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         required
       />
 
-      <label htmlFor="assunto">Assunto</label>
-      <input
-        id="assunto"
-        name="assunto"
-        type="text"
-        placeholder="Sobre o que vamos conversar?"
-        required
-      />
-
-      <label htmlFor="mensagem">Sua mensagem</label>
       <textarea
-        id="mensagem"
-        name="mensagem"
-        placeholder="Escreva sua mensagem..."
-        rows={5}
-        minLength={10}
+        placeholder="Sua mensagem"
+        value={mensagem}
+        onChange={(e) => setMensagem(e.target.value)}
         required
       />
 
-      {erro && <p className="erro-formulario">{erro}</p>}
-
-      <button type="submit" className="botao-principal">
-        Enviar mensagem ↗
+      <button className="botao" type="submit">
+        Enviar mensagem
       </button>
 
-      <p className="nota-formulario">
-        Todos os campos são obrigatórios.
-      </p>
+      {enviado && (
+        <p className="sucesso">
+          Mensagem validada! Obrigado pelo contato.
+        </p>
+      )}
     </form>
   );
 }

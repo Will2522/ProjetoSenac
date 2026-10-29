@@ -4,16 +4,14 @@
 import { useState } from "react";
 
 export default function Curtir() {
-  const [curtido, setCurtido] = useState(false);
+  const [curtidas, setCurtidas] = useState(0);
 
   return (
     <button
-      type="button"
-      className={`botao-curtir ${curtido ? "curtido" : ""}`}
-      onClick={() => setCurtido(!curtido)}
-      aria-pressed={curtido}
+      className="botao"
+      onClick={() => setCurtidas(curtidas + 1)}
     >
-      {curtido ? "♥ Curtido" : "♡ Curtir"}
+      ❤️ Curtir ({curtidas})
     </button>
   );
 }
