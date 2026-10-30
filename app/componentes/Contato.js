@@ -7,56 +7,115 @@ export default function Contato() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [mensagem, setMensagem] = useState("");
-  const [enviado, setEnviado] = useState(false);
+  const [resposta, setResposta] = useState("");
+  const [erro, setErro] = useState("");
+  const [enviando, setEnviando] = useState(false);
 
-  function enviar(e) {
-    e.preventDefault();
+  async function enviarContato(evento) {
+    evento.preventDefault();
 
-    if (!nome.trim() || !email.trim() || !mensagem.trim()) {
-      alert("Preencha todos os campos.");
-      return;
+    setErro("");
+    setResposta("");
+    setEnviando(true);
+
+    try {
+      const requisicao = await fetch("/api/contato", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome,
+          email,
+          mensagem,
+        }),
+      });
+
+      const tipoResposta =
+        requisicao.headers.get("content-type") || "";
+
+  if (!tipoResposta.includes("application/json")) {
+  setErro(
+    `Erro HTTP ${requisicao.status}: a API /api/contato não foi encontrada ou não retornou JSON.`
+  );
+  return;
+}
+
+      const dados = await requisicao.json();
+
+      if (!requisicao.ok) {
+        setErro(dados.erro || "Erro ao enviar mensagem.");
+        return;
+      }
+
+      setResposta(
+        dados.mensagem || "Mensagem recebida com sucesso!"
+      );
+
+      setNome("");
+      setEmail("");
+      setMensagem("");
+    } catch (error) {
+      console.error("Erro no formulário:", error);
+
+      setErro(
+        error.message || "Não foi possível conectar ao servidor."
+      );
+    } finally {
+      setEnviando(false);
     }
-
-    setEnviado(true);
-    setNome("");
-    setEmail("");
-    setMensagem("");
   }
 
   return (
-    <form className="formulario" onSubmit={enviar}>
-      <input
-        type="text"
-        placeholder="Seu nome"
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-        required
-      />
+    <div className="cartao">
+      <h2>Entre em Contato</h2>
 
-      <input
-        type="email"
-        placeholder="Seu e-mail"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
+      <form onSubmit={enviarContato}>
+        <label htmlFor="nome">Nome:</label>
+        <input
+          id="nome"
+          type="text"
+          placeholder="Digite seu nome"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          required
+        />
 
-      <textarea
-        placeholder="Sua mensagem"
-        value={mensagem}
-        onChange={(e) => setMensagem(e.target.value)}
-        required
-      />
+        <label htmlFor="email">E-mail:</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Digite seu e-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-      <button className="botao" type="submit">
-        Enviar mensagem
-      </button>
+        <label htmlFor="mensagem">Mensagem:</label>
+        <textarea
+          id="mensagem"
+          placeholder="Digite sua mensagem"
+          value={mensagem}
+          onChange={(e) => setMensagem(e.target.value)}
+          required
+        />
 
-      {enviado && (
-        <p className="sucesso">
-          Mensagem validada! Obrigado pelo contato.
+        <button type="submit" disabled={enviando}>
+          {enviando ? "Enviando..." : "Enviar mensagem"}
+        </button>
+      </form>
+
+      {erro && (
+        <p role="alert" style={{ color: "red" }}>
+          {erro}
         </p>
       )}
-    </form>
+
+      {resposta && (
+        <p role="status" style={{ color: "green" }}>
+          {resposta}
+        </p>
+      )}
+    </div>
   );
 }

@@ -62,5 +62,4 @@ export default function Tarefas() {
         </label>
       ))}
     </div>
-  );
-}
+)};

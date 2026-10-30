@@ -1,11 +1,9 @@
 
 import Image from "next/image";
-//import { cacheLife } from "next/cache";
+
 
 async function buscarRepositorios(usuario) {
- // "use cache";
- // cacheLife("hours");
-
+ 
   try {
     const resposta = await fetch(
       `https://api.github.com/users/${encodeURIComponent(usuario)}/repos?per_page=100`,

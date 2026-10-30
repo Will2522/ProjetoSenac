@@ -4,6 +4,7 @@ import Paragrafo from "./componentes/Paragrafo";
 import Cartao from "./componentes/Cartao";
 import Tarefas from "./componentes/Tarefas";
 import { Projeto } from "./componentes/Dados";
+import BuscaCep from "./componentes/BuscaCep";
 
 export default function Home() {
   const nome = "Willian Portela Rodrigues";
@@ -14,15 +15,13 @@ export default function Home() {
         <h1>Olá, eu sou {nome}!</h1>
         <p>Desenvolvedor Web em formação</p>
       </section>
-
-      <Secao titulo="Sobre mim">
+     <Secao titulo="Sobre mim">
         <Paragrafo>
           Sou estudante de Programação Web e desenvolvo
           aplicações utilizando React e Next.js.
         </Paragrafo>
       </Secao>
-
-      <Secao titulo="Meus Projetos">
+     <Secao titulo="Meus Projetos">
         <div className="grade">
           {Projeto.map((proj) => (
             <Cartao
@@ -39,6 +38,9 @@ export default function Home() {
       <Secao titulo="Lista de Tarefas">
         <Tarefas />
       </Secao>
-    </>
+<Secao titulo ="Busca de cep">
+  <BuscaCep/>
+</Secao>
+</>
   );
 }
