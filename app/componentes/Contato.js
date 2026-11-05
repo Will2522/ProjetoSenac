@@ -2,120 +2,128 @@
 "use client";
 
 import { useState } from "react";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { projetos } from "./Dados";
 
 export default function Contato() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [mensagem, setMensagem] = useState("");
-  const [resposta, setResposta] = useState("");
-  const [erro, setErro] = useState("");
-  const [enviando, setEnviando] = useState(false);
+  const [projeto, setProjeto] = useState("");
+  const [carregando, setCarregando] = useState(false);
+  const [status, setStatus] = useState("");
 
-  async function enviarContato(evento) {
-    evento.preventDefault();
+  async function enviarMensagem(e) {
+    e.preventDefault();
 
-    setErro("");
-    setResposta("");
-    setEnviando(true);
+    setStatus("");
+
+    if (nome.trim().length < 2) {
+      setStatus("Digite seu nome corretamente.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setStatus("Digite um e-mail válido.");
+      return;
+    }
+
+    if (mensagem.trim().length < 5) {
+      setStatus("Sua mensagem precisa ter pelo menos 5 caracteres.");
+      return;
+    }
+
+    setCarregando(true);
 
     try {
-      const requisicao = await fetch("/api/contato", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nome,
-          email,
-          mensagem,
-        }),
+      await addDoc(collection(db, "mensagens_contato"), {
+        nome: nome.trim(),
+        email: email.trim(),
+        mensagem: mensagem.trim(),
+        projeto: projeto || "Nenhum projeto selecionado",
+        dataCriacao: serverTimestamp(),
       });
 
-      const tipoResposta =
-        requisicao.headers.get("content-type") || "";
-
-  if (!tipoResposta.includes("application/json")) {
-  setErro(
-    `Erro HTTP ${requisicao.status}: a API /api/contato não foi encontrada ou não retornou JSON.`
-  );
-  return;
-}
-
-      const dados = await requisicao.json();
-
-      if (!requisicao.ok) {
-        setErro(dados.erro || "Erro ao enviar mensagem.");
-        return;
-      }
-
-      setResposta(
-        dados.mensagem || "Mensagem recebida com sucesso!"
-      );
+      setStatus("Mensagem enviada com sucesso!");
 
       setNome("");
       setEmail("");
       setMensagem("");
-    } catch (error) {
-      console.error("Erro no formulário:", error);
-
-      setErro(
-        error.message || "Não foi possível conectar ao servidor."
-      );
+      setProjeto("");
+    } catch (erro) {
+      console.error("Erro ao salvar mensagem:", erro);
+      setStatus("Não foi possível enviar. Verifique sua conexão com o Firebase.");
     } finally {
-      setEnviando(false);
+      setCarregando(false);
     }
   }
 
   return (
-    <div className="cartao">
-      <h2>Entre em Contato</h2>
+    <section className="contato">
+      <h2>Entre em contato</h2>
 
-      <form onSubmit={enviarContato}>
-        <label htmlFor="nome">Nome:</label>
+      <p>
+        Tem alguma dúvida ou deseja conversar sobre meus projetos?
+        Envie uma mensagem!
+      </p>
+
+      <form onSubmit={enviarMensagem}>
+        <label htmlFor="nome">Nome</label>
         <input
           id="nome"
           type="text"
-          placeholder="Digite seu nome"
+          placeholder="Seu nome"
           value={nome}
           onChange={(e) => setNome(e.target.value)}
           required
         />
 
-        <label htmlFor="email">E-mail:</label>
+        <label htmlFor="email">E-mail</label>
         <input
           id="email"
           type="email"
-          placeholder="Digite seu e-mail"
+          placeholder="seu@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
 
-        <label htmlFor="mensagem">Mensagem:</label>
+        <label htmlFor="projeto">Projeto de interesse</label>
+        <select
+          id="projeto"
+          value={projeto}
+          onChange={(e) => setProjeto(e.target.value)}
+        >
+          <option value="">Nenhum projeto específico</option>
+
+          {projetos.map((item) => (
+            <option key={item.id} value={item.titulo}>
+              {item.titulo}
+            </option>
+          ))}
+        </select>
+
+        <label htmlFor="mensagem">Mensagem</label>
         <textarea
           id="mensagem"
-          placeholder="Digite sua mensagem"
+          placeholder="Escreva sua mensagem..."
           value={mensagem}
           onChange={(e) => setMensagem(e.target.value)}
+          rows={5}
           required
         />
 
-        <button type="submit" disabled={enviando}>
-          {enviando ? "Enviando..." : "Enviar mensagem"}
+        <button type="submit" disabled={carregando}>
+          {carregando ? "Enviando..." : "Enviar mensagem"}
         </button>
+
+        {status && (
+          <p role="status" aria-live="polite">
+            {status}
+          </p>
+        )}
       </form>
-
-      {erro && (
-        <p role="alert" style={{ color: "red" }}>
-          {erro}
-        </p>
-      )}
-
-      {resposta && (
-        <p role="status" style={{ color: "green" }}>
-          {resposta}
-        </p>
-      )}
-    </div>
+    </section>
   );
 }
