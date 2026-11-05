@@ -6,7 +6,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { projetos } from "./Dados";
 
-export default function Contato() {
+export default function Contato({ projetos }) {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [mensagem, setMensagem] = useState("");
@@ -96,12 +96,12 @@ export default function Contato() {
           onChange={(e) => setProjeto(e.target.value)}
         >
           <option value="">Nenhum projeto específico</option>
-
-          {projetos.map((item) => (
-            <option key={item.id} value={item.titulo}>
-              {item.titulo}
-            </option>
-          ))}
+          
+          {Array.isArray(projetos) && projetos.map((item, index) => (
+  <option key={item.id || index} value={item.titulo}>
+    {item.titulo}
+  </option>
+))}
         </select>
 
         <label htmlFor="mensagem">Mensagem</label>

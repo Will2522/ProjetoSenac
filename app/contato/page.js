@@ -1,9 +1,9 @@
+
 import Contato from "../componentes/Contato";
+import { projetos } from "./componentes/dados";
 
 export default function ContatoPage() {
   return (
-    <section className="secao">
-      <Contato />
-    </section>
+    <Contato projetos={projetos} />
   );
 }
