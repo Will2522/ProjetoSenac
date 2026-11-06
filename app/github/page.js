@@ -54,12 +54,12 @@ export default async function GithubPage() {
       <p>Conheça meus projetos publicados.</p>
 
       <Image
-        src="/avatar.svg"
-        alt="Avatar do portfólio"
-        width={100}
-        height={100}
-      />
-
+  src="https://avatars.githubusercontent.com/u/192529564?s=400&v=4"
+  alt="Avatar do portfólio"
+  width={100}
+  height={100}
+/>
+      
       <p>
         <a
           href={`https://github.com/${usuario}`}
