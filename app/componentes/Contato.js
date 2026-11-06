@@ -1,10 +1,7 @@
-
 "use client";
-
 import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { projetos } from "./Dados";
 
 export default function ContatoPage() {
@@ -23,8 +20,8 @@ export default function ContatoPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return; // Evita duplo clique / envios múltiplos
-    
+    if (loading) return;
+
     setLoading(true);
     setSucesso(false);
     setErro("");
@@ -51,7 +48,6 @@ export default function ContatoPage() {
     <main className="min-h-screen pt-24 pb-12 px-6 max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold text-white mb-6">Contacto</h1>
 
-      {/* ATENÇÃO: onSubmit={handleSubmit} SEM PARÊNTESES */}
       <form onSubmit={handleSubmit} className="space-y-4 bg-gray-900 p-6 rounded-lg border border-gray-800">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">Nome</label>

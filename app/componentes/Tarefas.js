@@ -1,65 +1,98 @@
+"use client"
+import React, { useState, useEffect } from 'react';
+import { db } from '@/lib/firebase.js'; 
+import { 
+  collection, 
+  addDoc, 
+  getDocs, 
+  updateDoc, 
+  deleteDoc, 
+  doc 
+} from 'firebase/firestore';
 
-"use client";
+export default function ListaTarefas() {
+  const [tarefas, setTarefas] = useState([]);
+  const [novaTarefa, setNovaTarefa] = useState('');
 
-import { useState } from "react";
+  // 1. Buscar Tarefas
+  const carregarTarefas = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "tarefas"));
+      const lista = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setTarefas(lista);
+    } catch (error) {
+      console.error("Erro ao buscar tarefas (verifique as regras do Firestore):", error);
+    }
+  };
 
-export default function Tarefas() {
-  const [tarefas, setTarefas] = useState([
-    { id: 1, texto: "Criar componentes", feita: true },
-    { id: 2, texto: "Criar páginas", feita: false },
-    { id: 3, texto: "Finalizar portfólio", feita: false },
-  ]);
+  useEffect(() => {
+    carregarTarefas();
+  }, []);
 
-  const [nova, setNova] = useState("");
-
-  function adicionar(e) {
+  
+  const criarTarefa = async (e) => {
     e.preventDefault();
-    if (!nova.trim()) return;
+    if (!novaTarefa.trim()) return;
 
-    setTarefas([
-      ...tarefas,
-      { id: Date.now(), texto: nova.trim(), feita: false },
-    ]);
-    setNova("");
-  }
+    try {
+      await addDoc(collection(db, "tarefas"), {
+        titulo: novaTarefa,
+        concluida: false,
+        criadoEm: new Date()
+      });
+      setNovaTarefa('');
+      carregarTarefas(); 
+    } catch (error) {
+      console.error("Erro ao criar tarefa:", error);
+    }
+  };
 
-  function alternar(id) {
-    setTarefas(tarefas.map((t) =>
-      t.id === id ? { ...t, feita: !t.feita } : t
-    ));
-  }
 
-  const faltam = tarefas.filter((t) => !t.feita).length;
+  const alternarConcluida = async (id, statusAtual) => {
+    try {
+      const tarefaRef = doc(db, "tarefas", id);
+      await updateDoc(tarefaRef, {
+        concluida: !statusAtual
+      });
+      carregarTarefas();
+    } catch (error) {
+      console.error("Erro ao atualizar tarefa:", error);
+    }
+  };
+
+  
+  const removerTarefa = async (id) => {
+    try {
+      await deleteDoc(doc(db, "tarefas", id));
+      carregarTarefas();
+    } catch (error) {
+      console.error("Erro ao remover tarefa:", error);
+    }
+  };
 
   return (
-    <div className="cartao">
-      <h3>Minhas Tarefas</h3>
-      <p>Faltam {faltam} tarefas.</p>
-
-      <form onSubmit={adicionar} className="formulario">
-        <input
-          value={nova}
-          onChange={(e) => setNova(e.target.value)}
-          placeholder="Nova tarefa"
+    <div>
+      <h2>Minhas Tarefas</h2>
+      <form onSubmit={criarTarefa}>
+        <input 
+          type="text" 
+          value={novaTarefa} 
+          onChange={(e) => setNovaTarefa(e.target.value)} 
+          placeholder="Nova tarefa..." 
         />
-        <button className="botao" type="submit">
-          Adicionar
-        </button>
+        <button type="submit">Adicionar</button>
       </form>
 
-      {tarefas.map((t) => (
-        <label key={t.id} className="tarefa">
-          <input
-            type="checkbox"
-            checked={t.feita}
-            onChange={() => alternar(t.id)}
-          />
-          <span style={{
-            textDecoration: t.feita ? "line-through" : "none",
-          }}>
-            {t.texto}
-          </span>
-        </label>
-      ))}
+      <ul>
+        {tarefas.map((tarefa) => (
+          <li key={tarefa.id} style={{ textDecoration: tarefa.concluida ? 'line-through' : 'none' }}>
+            <span onClick={() => alternarConcluida(tarefa.id, tarefa.concluida)} style={{ cursor: 'pointer' }}>
+              {tarefa.titulo}
+            </span>
+            <button onClick={() => removerTarefa(tarefa.id)}>❌</button>
+          </li>
+        ))}
+      </ul>
     </div>
-)};
+  );
+}
