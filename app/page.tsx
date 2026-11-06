@@ -24,13 +24,13 @@ export default function Home() {
       </Secao>
      <Secao titulo="Meus Projetos">
         <div className="grade">
-          {Projeto.map((projeto: { id: Key | null | undefined; titulo: string; descricao: string; tecnologias: string[] | undefined; }) => (
+          {Projeto.map((proj) => (
             <Cartao
-              key={projeto.id}
-              id={Number(projeto.id)}
-              titulo={projeto.titulo}
-              descricao={projeto.descricao}
-              tecnologias={projeto.tecnologias}
+              key={proj.id}
+              id={Number(proj.id)}
+              titulo={proj.titulo}
+              descricao={proj.descricao}
+              tecnologias={proj.tecnologias}
             />
           ))}
         </div>
