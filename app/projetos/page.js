@@ -8,12 +8,13 @@ export default function ProjetosPage() {
       <h1>Todos os Projetos</h1>
 
       <div className="grade">
-        {Projeto.map((proj) => (
-          <Cartao
-            key={proj.id}
-            {...proj}
-          />
-        ))}
+        {Projeto.map((proj) => {
+          return (
+            <Cartao
+              key={proj.id}
+              {...proj} />
+          );
+        })}
       </div>
     </section>
   );

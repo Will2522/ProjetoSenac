@@ -3,7 +3,7 @@ import Secao from "./componentes/Secao";
 import Paragrafo from "./componentes/Paragrafo";
 import Cartao from "./componentes/Cartao";
 import Tarefas from "./componentes/Tarefas";
-import { projeto } from "./componentes/Dados";
+import { Projeto, projeto } from "./componentes/Dados";
 import BuscaCep from "./componentes/BuscaCep";
 import { Key } from "react";
 
@@ -24,7 +24,7 @@ export default function Home() {
       </Secao>
      <Secao titulo="Meus Projetos">
         <div className="grade">
-          {projeto.map((projeto: { id: Key | null | undefined; titulo: string; descricao: string; tecnologias: string[] | undefined; }) => (
+          {Projeto.map((projeto: { id: Key | null | undefined; titulo: string; descricao: string; tecnologias: string[] | undefined; }) => (
             <Cartao
               key={projeto.id}
               id={Number(projeto.id)}
