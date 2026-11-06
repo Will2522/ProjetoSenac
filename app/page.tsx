@@ -3,7 +3,7 @@ import Secao from "./componentes/Secao";
 import Paragrafo from "./componentes/Paragrafo";
 import Cartao from "./componentes/Cartao";
 import Tarefas from "./componentes/Tarefas";
-import { Projeto, projeto } from "./componentes/Dados";
+import { Projeto } from "./componentes/Dados";
 import BuscaCep from "./componentes/BuscaCep";
 import { Key } from "react";
 
