@@ -3,8 +3,9 @@ import Secao from "./componentes/Secao";
 import Paragrafo from "./componentes/Paragrafo";
 import Cartao from "./componentes/Cartao";
 import Tarefas from "./componentes/Tarefas";
-import { Projeto } from "./componentes/Dados";
+import { projeto } from "./componentes/Dados";
 import BuscaCep from "./componentes/BuscaCep";
+import { Key } from "react";
 
 export default function Home() {
   const nome = "Willian Portela Rodrigues";
@@ -23,13 +24,13 @@ export default function Home() {
       </Secao>
      <Secao titulo="Meus Projetos">
         <div className="grade">
-          {Projeto.map((proj) => (
+          {projeto.map((projeto: { id: Key | null | undefined; titulo: string; descricao: string; tecnologias: string[] | undefined; }) => (
             <Cartao
-              key={proj.id}
-              id={proj.id}
-              titulo={proj.titulo}
-              descricao={proj.descricao}
-              tecnologias={proj.tecnologias}
+              key={projeto.id}
+              id={Number(projeto.id)}
+              titulo={projeto.titulo}
+              descricao={projeto.descricao}
+              tecnologias={projeto.tecnologias}
             />
           ))}
         </div>

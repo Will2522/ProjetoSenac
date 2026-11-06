@@ -1,5 +1,5 @@
 
-export const projetos = [
+export const projeto = [
   {
     id: 1,
     titulo: "Meu Portfólio",

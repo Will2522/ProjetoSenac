@@ -2,128 +2,107 @@
 "use client";
 
 import { useState } from "react";
+import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { projetos } from "./Dados";
 
-export default function Contato({ projetos }) {
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [mensagem, setMensagem] = useState("");
-  const [projeto, setProjeto] = useState("");
-  const [carregando, setCarregando] = useState(false);
-  const [status, setStatus] = useState("");
+export default function ContatoPage() {
+  const [formData, setFormData] = useState({
+    nome: "",
+    email: "",
+    mensagem: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [sucesso, setSucesso] = useState(false);
+  const [erro, setErro] = useState("");
 
-  async function enviarMensagem(e) {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    setStatus("");
-
-    if (nome.trim().length < 2) {
-      setStatus("Digite seu nome corretamente.");
-      return;
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setStatus("Digite um e-mail válido.");
-      return;
-    }
-
-    if (mensagem.trim().length < 5) {
-      setStatus("Sua mensagem precisa ter pelo menos 5 caracteres.");
-      return;
-    }
-
-    setCarregando(true);
+    if (loading) return; // Evita duplo clique / envios múltiplos
+    
+    setLoading(true);
+    setSucesso(false);
+    setErro("");
 
     try {
-      await addDoc(collection(db, "mensagens_contato"), {
-        nome: nome.trim(),
-        email: email.trim(),
-        mensagem: mensagem.trim(),
-        projeto: projeto || "Nenhum projeto selecionado",
-        dataCriacao: serverTimestamp(),
+      await addDoc(collection(db, "mensagens"), {
+        nome: formData.nome,
+        email: formData.email,
+        mensagem: formData.mensagem,
+        criadoEm: serverTimestamp()
       });
 
-      setStatus("Mensagem enviada com sucesso!");
-
-      setNome("");
-      setEmail("");
-      setMensagem("");
-      setProjeto("");
-    } catch (erro) {
-      console.error("Erro ao salvar mensagem:", erro);
-      setStatus("Não foi possível enviar. Verifique sua conexão com o Firebase.");
+      setSucesso(true);
+      setFormData({ nome: "", email: "", mensagem: "" });
+    } catch (err) {
+      console.error("Erro ao enviar mensagem: ", err);
+      setErro("Ocorreu um erro ao enviar a mensagem. Tente novamente.");
     } finally {
-      setCarregando(false);
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <section className="contato">
-      <h2>Entre em contato</h2>
+    <main className="min-h-screen pt-24 pb-12 px-6 max-w-2xl mx-auto">
+      <h1 className="text-3xl font-bold text-white mb-6">Contacto</h1>
 
-      <p>
-        Tem alguma dúvida ou deseja conversar sobre meus projetos?
-        Envie uma mensagem!
-      </p>
+      {/* ATENÇÃO: onSubmit={handleSubmit} SEM PARÊNTESES */}
+      <form onSubmit={handleSubmit} className="space-y-4 bg-gray-900 p-6 rounded-lg border border-gray-800">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Nome</label>
+          <input
+            type="text"
+            name="nome"
+            value={formData.nome}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500"
+            placeholder="O seu nome"
+          />
+        </div>
 
-      <form onSubmit={enviarMensagem}>
-        <label htmlFor="nome">Nome</label>
-        <input
-          id="nome"
-          type="text"
-          placeholder="Seu nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">E-mail</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500"
+            placeholder="O seu e-mail"
+          />
+        </div>
 
-        <label htmlFor="email">E-mail</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="seu@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Mensagem</label>
+          <textarea
+            name="mensagem"
+            rows="4"
+            value={formData.mensagem}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500"
+            placeholder="Escreva a sua mensagem..."
+          />
+        </div>
 
-        <label htmlFor="projeto">Projeto de interesse</label>
-        <select
-          id="projeto"
-          value={projeto}
-          onChange={(e) => setProjeto(e.target.value)}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition disabled:opacity-50"
         >
-          <option value="">Nenhum projeto específico</option>
-          
-          {Array.isArray(projetos) && projetos.map((item, index) => (
-  <option key={item.id || index} value={item.titulo}>
-    {item.titulo}
-  </option>
-))}
-        </select>
-
-        <label htmlFor="mensagem">Mensagem</label>
-        <textarea
-          id="mensagem"
-          placeholder="Escreva sua mensagem..."
-          value={mensagem}
-          onChange={(e) => setMensagem(e.target.value)}
-          rows={5}
-          required
-        />
-
-        <button type="submit" disabled={carregando}>
-          {carregando ? "Enviando..." : "Enviar mensagem"}
+          {loading ? "A enviar..." : "Enviar Mensagem"}
         </button>
 
-        {status && (
-          <p role="status" aria-live="polite">
-            {status}
-          </p>
-        )}
+        {sucesso && <p className="text-green-400 text-sm mt-2">Mensagem enviada com sucesso!</p>}
+        {erro && <p className="text-red-400 text-sm mt-2">{erro}</p>}
       </form>
-    </section>
+    </main>
   );
 }
