@@ -14,7 +14,7 @@ export default function ListaTarefas() {
   const [tarefas, setTarefas] = useState([]);
   const [novaTarefa, setNovaTarefa] = useState('');
 
-  // 1. Buscar Tarefas
+  
   const carregarTarefas = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "tarefas"));
