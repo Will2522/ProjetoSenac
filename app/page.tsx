@@ -1,11 +1,12 @@
 
-import Secao from "./componentes/Secao";
-import Paragrafo from "./componentes/Paragrafo";
-import Cartao from "./componentes/Cartao";
-import Tarefas from "./componentes/Tarefas";
-import { Projeto } from "./componentes/Dados";
-import BuscaCep from "./componentes/BuscaCep";
+import Secao from "../componentes/Secao";
+import Paragrafo from "../componentes/Paragrafo";
+import Cartao from "../componentes/Cartao";
+import Tarefas from "../componentes/Tarefas";
+import { Projeto } from "../componentes/Dados";
+import BuscaCep from "../services/BuscaCep";
 import { Key } from "react";
+import ListaTarefas from "../componentes/ListaTarefas";
 
 export default function Home() {
   const nome = "Willian Portela Rodrigues";
@@ -37,7 +38,7 @@ export default function Home() {
       </Secao>
 
       <Secao titulo="Lista de Tarefas">
-        <Tarefas />
+        <ListaTarefas />
       </Secao>
 <Secao titulo ="Busca de cep">
   <BuscaCep/>

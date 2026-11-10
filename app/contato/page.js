@@ -1,6 +1,6 @@
 
-import Contato from "../componentes/Contato";
-import { projetos } from "../componentes/Dados";
+import Contato from "../app/componentes/Contato";
+import { projetos } from "../app/componentes/Dados";
 
 export default function ContatoPage() {
   return (
