@@ -34,7 +34,7 @@
   "**/*.tsx",
   ".next/types/**/*.ts",
   "css.d.ts"
-],
+, "componentes/Cartao.js"],
   "exclude": [
     "node_modules"
   ]

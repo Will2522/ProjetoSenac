@@ -1,4 +1,8 @@
 
 export default function Paragrafo({ children }) {
-  return <p>{children}</p>;
+  return (
+    <p className="text-base leading-relaxed mb-4">
+      {children}
+    </p>
+  );
 }

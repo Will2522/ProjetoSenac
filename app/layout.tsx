@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import "./globals.css";
+import '../app/globals.css'; 
 import Cabecalho from "../componentes/Cabecalho";
 import Rodape from "../componentes/Rodape";
 

@@ -13,62 +13,64 @@ import {
 
 import { db } from "../lib/firebase";
 
+const tarefasRef = collection(db, "tarefas");
 
+// VALIDAR TAREFA
 export function validarTarefa(texto) {
   if (!texto || !texto.trim()) {
-    throw new Error("Digite uma tarefa antes de adicionar.");
+    throw new Error("Digite uma tarefa.");
   }
 
   if (texto.trim().length < 3) {
-    throw new Error("A tarefa precisa ter pelo menos 3 caracteres.");
+    throw new Error("Digite pelo menos 3 caracteres.");
   }
 
   if (texto.trim().length > 100) {
-    throw new Error("A tarefa deve ter no máximo 100 caracteres.");
+    throw new Error("A tarefa não pode ultrapassar 100 caracteres.");
   }
 
   return texto.trim();
 }
 
-
+// LISTAR TAREFAS
 export function observarTarefas(callback, callbackErro) {
-  const tarefasRef = collection(db, "tarefas");
-  const tarefasQuery = query(
+  const consulta = query(
     tarefasRef,
     orderBy("criadaEm", "desc")
   );
 
   return onSnapshot(
-    tarefasQuery,
+    consulta,
     (snapshot) => {
-      const lista = snapshot.docs.map((documento) => ({
-        id: documento.id,
-        ...documento.data()
+      const tarefas = snapshot.docs.map((item) => ({
+        id: item.id,
+        ...item.data()
       }));
 
-      callback(lista);
+      callback(tarefas);
     },
-    (erro) => {
-      callbackErro("Não foi possível carregar as tarefas.");
-      console.error(erro);
+    (error) => {
+      console.error("Erro Firebase:", error);
+      callbackErro("Erro ao carregar as tarefas.");
     }
   );
 }
 
+// ADICIONAR
 export async function adicionarTarefa(texto) {
   const textoValidado = validarTarefa(texto);
 
-  await addDoc(collection(db, "tarefas"), {
+  await addDoc(tarefasRef, {
     texto: textoValidado,
     concluida: false,
     criadaEm: serverTimestamp()
   });
 }
 
-
+// MARCAR COMO CONCLUÍDA
 export async function marcarTarefa(id, concluida) {
   if (!id) {
-    throw new Error("Tarefa inválida.");
+    throw new Error("Identificação da tarefa inválida.");
   }
 
   await updateDoc(doc(db, "tarefas", id), {
@@ -76,7 +78,7 @@ export async function marcarTarefa(id, concluida) {
   });
 }
 
-
+// EXCLUIR
 export async function removerTarefa(id) {
   if (!id) {
     throw new Error("Não foi possível identificar a tarefa.");

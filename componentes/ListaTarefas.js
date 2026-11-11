@@ -13,19 +13,22 @@ import {
 } from "./services/tarefasService";
 
 export default function ListaTarefas() {
+
   const [tarefas, setTarefas] = useState([]);
   const [texto, setTexto] = useState("");
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const [inicializando, setInicializando] = useState(true);
 
   useEffect(() => {
     const cancelar = observarTarefas(
       (lista) => {
         setTarefas(lista);
-        setErro("");
+        setInicializando(false);
       },
       (mensagem) => {
         setErro(mensagem);
+        setInicializando(false);
       }
     );
 
@@ -55,7 +58,7 @@ export default function ListaTarefas() {
         tarefa.concluida
       );
     } catch (error) {
-      setErro(error.message || "Erro ao marcar tarefa.");
+      setErro("Erro ao atualizar tarefa.");
     }
   }
 
@@ -65,32 +68,35 @@ export default function ListaTarefas() {
     try {
       await removerTarefa(id);
     } catch (error) {
-      setErro(error.message || "Erro ao excluir tarefa.");
+      setErro("Erro ao excluir tarefa.");
     }
   }
 
   return (
-    <section className="max-w-xl mx-auto p-5 border rounded-xl">
+    <section className="max-w-2xl mx-auto p-6 rounded-2xl border border-gray-200 shadow-sm">
 
-      <h2 className="text-2xl font-bold mb-4">
+      <h2 className="text-2xl font-bold mb-5">
         Minhas tarefas
       </h2>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-5">
 
         <input
           type="text"
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
-          placeholder="Digite uma tarefa..."
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !carregando) adicionar();
+          }}
+          placeholder="Digite uma nova tarefa..."
           maxLength={100}
-          className="border rounded-lg p-3 flex-1 min-w-0"
+          className="flex-1 min-w-0 border rounded-lg p-3"
         />
 
         <button
           onClick={adicionar}
           disabled={carregando}
-          className="bg-blue-600 text-white px-4 rounded-lg disabled:opacity-50"
+          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 rounded-lg"
         >
           {carregando ? "Salvando..." : "Adicionar"}
         </button>
@@ -98,12 +104,17 @@ export default function ListaTarefas() {
       </div>
 
       {erro && (
-        <p className="text-red-500 mb-4" role="alert">
+        <div
+          role="alert"
+          className="bg-red-100 text-red-700 p-3 rounded-lg mb-4"
+        >
           {erro}
-        </p>
+        </div>
       )}
 
-      {tarefas.length === 0 ? (
+      {inicializando ? (
+        <p>Carregando tarefas...</p>
+      ) : tarefas.length === 0 ? (
         <p className="text-gray-500">
           Nenhuma tarefa cadastrada.
         </p>
@@ -118,9 +129,11 @@ export default function ListaTarefas() {
         ))
       )}
 
-      <p className="mt-4 text-sm text-gray-500">
-        Tarefas cadastradas: {tarefas.length}
-      </p>
+      <div className="mt-5 text-sm text-gray-500">
+        Total: {tarefas.length} tarefas
+        {" | "}
+        Concluídas: {tarefas.filter(t => t.concluida).length}
+      </div>
 
     </section>
   );

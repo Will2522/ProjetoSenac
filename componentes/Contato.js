@@ -1,104 +1,120 @@
+
 "use client";
+
 import { useState } from "react";
-import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { projetos } from "./Dados";
+import { salvarContato } from "./services/contatoService";
+import { Projeto } from "./Dados";
 
-export default function ContatoPage() {
-  const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    mensagem: ""
-  });
-  const [loading, setLoading] = useState(false);
-  const [sucesso, setSucesso] = useState(false);
+export default function Contato() {
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [projeto, setProjeto] = useState("");
+  const [mensagem, setMensagem] = useState("");
+
   const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState("");
+  const [carregando, setCarregando] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  async function enviar(e) {
     e.preventDefault();
-    if (loading) return;
 
-    setLoading(true);
-    setSucesso(false);
     setErro("");
+    setSucesso("");
+    setCarregando(true);
 
     try {
-      await addDoc(collection(db, "mensagens"), {
-        nome: formData.nome,
-        email: formData.email,
-        mensagem: formData.mensagem,
-        criadoEm: serverTimestamp()
+      await salvarContato({
+        nome,
+        email,
+        projeto,
+        mensagem
       });
 
-      setSucesso(true);
-      setFormData({ nome: "", email: "", mensagem: "" });
-    } catch (err) {
-      console.error("Erro ao enviar mensagem: ", err);
-      setErro("Ocorreu um erro ao enviar a mensagem. Tente novamente.");
+      setSucesso("Mensagem enviada com sucesso!");
+
+      setNome("");
+      setEmail("");
+      setProjeto("");
+      setMensagem("");
+
+    } catch (error) {
+      setErro(error.message || "Erro ao enviar mensagem.");
     } finally {
-      setLoading(false);
+      setCarregando(false);
     }
-  };
+  }
 
   return (
-    <main className="min-h-screen pt-24 pb-12 px-6 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-white mb-6">Contacto</h1>
+    <form
+      onSubmit={enviar}
+      className="max-w-xl mx-auto flex flex-col gap-4"
+    >
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-gray-900 p-6 rounded-lg border border-gray-800">
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Nome</label>
-          <input
-            type="text"
-            name="nome"
-            value={formData.nome}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500"
-            placeholder="O seu nome"
-          />
-        </div>
+      <label htmlFor="nome">Nome</label>
+      <input
+        id="nome"
+        value={nome}
+        onChange={(e) => setNome(e.target.value)}
+        placeholder="Seu nome"
+        className="border rounded-lg p-3"
+      />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">E-mail</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500"
-            placeholder="O seu e-mail"
-          />
-        </div>
+      <label htmlFor="email">E-mail</label>
+      <input
+        id="email"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="seuemail@email.com"
+        className="border rounded-lg p-3"
+      />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Mensagem</label>
-          <textarea
-            name="mensagem"
-            rows="4"
-            value={formData.mensagem}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500"
-            placeholder="Escreva a sua mensagem..."
-          />
-        </div>
+      <label htmlFor="projeto">Projeto relacionado</label>
+      <select
+        id="projeto"
+        value={projeto}
+        onChange={(e) => setProjeto(e.target.value)}
+        className="border rounded-lg p-3"
+      >
+        <option value="">Nenhum projeto específico</option>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition disabled:opacity-50"
-        >
-          {loading ? "A enviar..." : "Enviar Mensagem"}
-        </button>
+        {Projeto.map((item) => (
+          <option key={item.id} value={item.titulo}>
+            {item.titulo}
+          </option>
+        ))}
+      </select>
 
-        {sucesso && <p className="text-green-400 text-sm mt-2">Mensagem enviada com sucesso!</p>}
-        {erro && <p className="text-red-400 text-sm mt-2">{erro}</p>}
-      </form>
-    </main>
+      <label htmlFor="mensagem">Mensagem</label>
+      <textarea
+        id="mensagem"
+        value={mensagem}
+        onChange={(e) => setMensagem(e.target.value)}
+        placeholder="Escreva sua mensagem..."
+        rows={5}
+        className="border rounded-lg p-3"
+      />
+
+      {erro && (
+        <p role="alert" className="text-red-600">
+          {erro}
+        </p>
+      )}
+
+      {sucesso && (
+        <p role="status" className="text-green-600">
+          {sucesso}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={carregando}
+        className="bg-blue-600 text-white p-3 rounded-lg disabled:opacity-50"
+      >
+        {carregando ? "Enviando..." : "Enviar mensagem"}
+      </button>
+
+    </form>
   );
 }
