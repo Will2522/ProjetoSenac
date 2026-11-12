@@ -1,5 +1,5 @@
 import { buscarRepositorios } from "@/services/githubServices";
-import { formatarData } from "@/lib/formatters"; // Importando da lib
+import { formatarData } from "@/lib/formatters"; 
 
 export default async function GithubPage() {
   const usuario = "Will2522";
@@ -9,7 +9,7 @@ export default async function GithubPage() {
   return (
     <main className="conteudo">
       <section className="secao">
-        {/* ... cabeçalho do perfil ... */}
+        <h2>Repositórios Públicos de {usuario}</h2>
 
         {erro && (
           <p style={{ color: "#f87171", fontWeight: "bold" }}>{erro}</p>
@@ -32,7 +32,7 @@ export default async function GithubPage() {
               <h3>{repo.name}</h3>
               <p>{repo.description || "Sem descrição informada."}</p>
 
-              {/* Exibindo a data formatada usando o utilitário da lib */}
+             
               <p style={{ fontSize: "12px", color: "#6b7280", margin: "8px 0" }}>
                 Atualizado em: {formatarData(repo.updated_at)}
               </p>

@@ -15,7 +15,7 @@ import { db } from "../lib/firebase";
 
 const tarefasRef = collection(db, "tarefas");
 
-// VALIDAR TAREFA
+
 export function validarTarefa(texto) {
   if (!texto || !texto.trim()) {
     throw new Error("Digite uma tarefa.");
@@ -32,7 +32,7 @@ export function validarTarefa(texto) {
   return texto.trim();
 }
 
-// LISTAR TAREFAS
+
 export function observarTarefas(callback, callbackErro) {
   const consulta = query(
     tarefasRef,
@@ -56,7 +56,7 @@ export function observarTarefas(callback, callbackErro) {
   );
 }
 
-// ADICIONAR
+
 export async function adicionarTarefa(texto) {
   const textoValidado = validarTarefa(texto);
 
@@ -67,7 +67,6 @@ export async function adicionarTarefa(texto) {
   });
 }
 
-// MARCAR COMO CONCLUÍDA
 export async function marcarTarefa(id, concluida) {
   if (!id) {
     throw new Error("Identificação da tarefa inválida.");
@@ -78,7 +77,7 @@ export async function marcarTarefa(id, concluida) {
   });
 }
 
-// EXCLUIR
+
 export async function removerTarefa(id) {
   if (!id) {
     throw new Error("Não foi possível identificar a tarefa.");
