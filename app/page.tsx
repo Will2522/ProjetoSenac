@@ -39,7 +39,7 @@ export default function Home() {
       
       <div style={{ margin: "20px 0" }}>
         <Link href="/github" className="botao">
-          Ver meus Repositórios do GitHub 🚀
+          Ver meus Repositórios do GitHub 
         </Link>
       </div>
 
