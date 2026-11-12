@@ -8,6 +8,7 @@ import Cartao from "@/componentes/Cartao";
 import Curtir from "@/componentes/Curtir";
 import ListaTarefas from "@/componentes/ListaTarefas";
 import { projetos } from "@/componentes/Dados";
+import BuscarCepForm from "@/app/BuscarCepForm";
 
 export default function Home() {
   return (
@@ -27,31 +28,16 @@ export default function Home() {
             apaixonado por tecnologia e programação.
           </p>
 
+
           <div className="flex flex-wrap gap-4">
 
-            <Link
-              href="/projetos"
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg"
-            >
-              Ver projetos
-            </Link>
-
-            <Link
-              href="/contato"
-              className="border px-6 py-3 rounded-lg"
-            >
-              Fale comigo
-            </Link>
-
-            <a
-              href="https://github.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border px-6 py-3 rounded-lg"
-            >
-              GitHub
-            </a>
-
+            
+<main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <h1>Bem-vindo à Página Inicial</h1>
+      <p>Consulte seu endereço rapidamente digitando o CEP abaixo:</p>
+      
+      <BuscarCepForm />
+    </main>
           </div>
 
         </section>

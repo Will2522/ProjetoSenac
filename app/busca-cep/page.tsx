@@ -1,48 +1,37 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
+import { consultarCep } from "@/services/cepServices";
 
-export default function BuscaCep() {
+type Endereco = {
+  logradouro?: string;
+  bairro?: string;
+  localidade?: string;
+  uf?: string;
+  cep?: string;
+};
+
+export default function BuscaCepPage() {
   const [cep, setCep] = useState("");
-  const [endereco, setEndereco] = useState(null);
+  const [endereco, setEndereco] = useState<Endereco | null>(null);
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
 
-  async function buscarCep(evento) {
+  async function handleBuscarCep(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
-
-    const cepLimpo = cep.replace(/\D/g, "");
-
     setErro("");
     setEndereco(null);
-
-    if (cepLimpo.length !== 8) {
-      setErro("CEP inválido. Digite exatamente 8 números.");
-      return;
-    }
-
     setCarregando(true);
 
     try {
-      const resposta = await fetch(
-        `https://viacep.com.br/ws/${cepLimpo}/json/`
-      );
-
-      if (!resposta.ok) {
-        throw new Error("Erro ao consultar o CEP.");
-      }
-
-      const dados = await resposta.json();
-
-      if (dados.erro) {
-        setErro("CEP não encontrado.");
-        return;
-      }
-
+      const dados = await consultarCep(cep);
       setEndereco(dados);
-    } catch {
-      setErro("Não foi possível consultar o CEP.");
+    } catch (err) {
+      setErro(
+        err instanceof Error
+          ? err.message
+          : "Não foi possível consultar o CEP."
+      );
     } finally {
       setCarregando(false);
     }
@@ -52,7 +41,7 @@ export default function BuscaCep() {
     <div className="cartao">
       <h3>Consultar endereço pelo CEP</h3>
 
-      <form onSubmit={buscarCep}>
+      <form onSubmit={handleBuscarCep}>
         <input
           type="text"
           placeholder="Digite seu CEP"
