@@ -27,11 +27,7 @@ export default function BuscaCepPage() {
       const dados = await consultarCep(cep);
       setEndereco(dados);
     } catch (err) {
-      setErro(
-        err instanceof Error
-          ? err.message
-          : "Não foi possível consultar o CEP."
-      );
+      setErro(err instanceof Error ? err.message : "Não foi possível consultar o CEP.");
     } finally {
       setCarregando(false);
     }

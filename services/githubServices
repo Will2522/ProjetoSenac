@@ -1,15 +1,8 @@
-export async function buscarRepositorios(usuario) {
+import { fetchGithubUserRepos } from "@/lib/githubApi";
+
+export async function obterRepositorios(usuario) {
   try {
-    const resposta = await fetch(
-      `https://api.github.com/users/${usuario}/repos?per_page=100&sort=updated`,
-      {
-        headers: {
-          Accept: "application/vnd.github+json",
-          "User-Agent": "DevPortfolio",
-        },
-        cache: "no-store",
-      }
-    );
+    const resposta = await fetchGithubUserRepos(usuario);
 
     if (resposta.status === 404) {
       return {
