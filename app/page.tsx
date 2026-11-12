@@ -7,7 +7,7 @@ import Secao from "@/componentes/Secao";
 import Cartao from "@/componentes/Cartao";
 import Curtir from "@/componentes/Curtir";
 import ListaTarefas from "@/componentes/ListaTarefas";
-import { Projeto } from "@/componentes/Dados";
+import { projetos } from "@/componentes/Dados";
 
 export default function Home() {
   return (
@@ -68,19 +68,19 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            {Projeto.map((item) => (
+            {projetos.map((projeto) => (
               <Cartao
-                key={item.id}
-                titulo={item.titulo}
-                descricao={item.descricao}
+                key={projeto.id}
+                titulo={projeto.titulo}
+                descricao={projeto.descricao}
               >
                 <div className="mt-4">
                   <p className="text-sm mb-3">
-                    Tecnologias: {item.tecnologias.join(", ")}
+                    Tecnologias: {projeto.tecnologias.join(", ")}
                   </p>
 
                   <a
-                    href={item.github}
+                    href={projeto.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline"
@@ -90,7 +90,7 @@ export default function Home() {
 
                   <div className="mt-4">
                     <Link
-                      href={`/projetos/${item.id}`}
+                      href={`/projetos/${projeto.id}`}
                       className="text-blue-600 underline"
                     >
                       Ver detalhes

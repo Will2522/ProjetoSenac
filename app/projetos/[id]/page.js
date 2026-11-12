@@ -1,42 +1,59 @@
-
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Projeto } from "../../componentes/Dados";
+import { projetos } from "@/componentes/Dados";
 
 export function generateStaticParams() {
-  return Projeto.map((proj) => ({
+  return projetos.map((proj) => ({
     id: String(proj.id),
   }));
 }
 
-export default async function DetalhesPage({ params }) {
+export default async function DetalheProjetoPage({ params }) {
   const { id } = await params;
+  const projeto = projetos.find((p) => String(p.id) === String(id));
 
-  const projeto = Projeto.find(
-    (proj) => String(proj.id) === id
-  );
-
-  if (!projeto) notFound();
+  if (!projeto) {
+    return (
+      <main className="conteudo">
+        <section className="secao">
+          <h1>Projeto não encontrado</h1>
+          <Link href="/projetos" className="botao">
+            Voltar para projetos
+          </Link>
+        </section>
+      </main>
+    );
+  }
 
   return (
-    <section className="secao">
-      <h1>{projeto.titulo}</h1>
-      <p>{projeto.descricao}</p>
+    <main className="conteudo">
+      <section className="secao">
+        <div className="cartao">
+          <h1>{projeto.titulo}</h1>
+          <p>{projeto.descricao}</p>
 
-      <h2>Tecnologias</h2>
-      <div className="tecnologias">
-        {projeto.tecnologias.map((tec) => (
-          <span key={tec} className="tag">
-            {tec}
-          </span>
-        ))}
-      </div>
+          <div className="tecnologias">
+            {projeto.tecnologias?.map((tech, index) => (
+              <span key={index} className="tag">
+                {tech}
+              </span>
+            ))}
+          </div>
 
-      <p style={{ marginTop: 24 }}>
-        <Link href="/projetos" className="botao">
-          Voltar aos projetos
-        </Link>
-      </p>
-    </section>
+          <div className="acoes">
+            <a
+              href={projeto.github || "https://github.com/Will2522"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="botao"
+            >
+              Ver no GitHub
+            </a>
+            <Link href="/projetos" className="botao">
+              Voltar
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

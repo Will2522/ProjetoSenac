@@ -10,6 +10,8 @@ import {
   doc 
 } from 'firebase/firestore';
 
+/** @typedef {{ id: string, titulo: string, concluida: boolean }} Tarefa */
+
 export default function ListaTarefas() {
   const [tarefas, setTarefas] = useState([]);
   const [novaTarefa, setNovaTarefa] = useState('');
@@ -18,7 +20,10 @@ export default function ListaTarefas() {
   const carregarTarefas = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "tarefas"));
-      const lista = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const lista = querySnapshot.docs.map(documento => ({
+        ...documento.data(),
+        id: documento.id
+      }));
       setTarefas(lista);
     } catch (error) {
       console.error("Erro ao buscar tarefas (verifique as regras do Firestore):", error);

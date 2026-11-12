@@ -1,9 +1,10 @@
 
 "use client";
 
+
 import { useState } from "react";
-import { salvarContato } from "./services/contatoService";
-import { Projeto } from "./Dados";
+import { salvarContato } from "@/services/ContatoService";
+import { projetos } from "./Dados";
 
 export default function Contato() {
   const [nome, setNome] = useState("");
@@ -38,7 +39,7 @@ export default function Contato() {
       setMensagem("");
 
     } catch (error) {
-      setErro(error.message || "Erro ao enviar mensagem.");
+      setErro(error instanceof Error ? error.message : "Erro ao enviar mensagem.");
     } finally {
       setCarregando(false);
     }
@@ -78,7 +79,7 @@ export default function Contato() {
       >
         <option value="">Nenhum projeto específico</option>
 
-        {Projeto.map((item) => (
+        {projetos.map((item) => (
           <option key={item.id} value={item.titulo}>
             {item.titulo}
           </option>

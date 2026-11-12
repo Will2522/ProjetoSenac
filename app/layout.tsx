@@ -1,24 +1,14 @@
-
-import type { Metadata } from "next";
-import '../app/globals.css'; 
-import Cabecalho from "../componentes/Cabecalho";
-import Rodape from "../componentes/Rodape";
-
-
-export const metadata: Metadata = {
-  title: "Dev Portfólio",
-  description: "Meu portfólio de programação web",
-};
+import './globals.css';
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="pt-BR">
       <body>
-        <Cabecalho />
-        <main className="conteudo">{children}</main>
-        <Rodape />
+        {children}
       </body>
     </html>
   );

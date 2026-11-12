@@ -10,7 +10,7 @@ import {
   adicionarTarefa,
   marcarTarefa,
   removerTarefa
-} from "./services/tarefasService";
+} from "../services/TarefasService";
 
 export default function ListaTarefas() {
 
@@ -43,7 +43,7 @@ export default function ListaTarefas() {
       await adicionarTarefa(texto);
       setTexto("");
     } catch (error) {
-      setErro(error.message || "Erro ao adicionar tarefa.");
+      setErro(error instanceof Error ? error.message : "Erro ao adicionar tarefa.");
     } finally {
       setCarregando(false);
     }
@@ -66,7 +66,7 @@ export default function ListaTarefas() {
     setErro("");
 
     try {
-      await removerTarefa(id);
+      await removerTarefa(String(id));
     } catch (error) {
       setErro("Erro ao excluir tarefa.");
     }

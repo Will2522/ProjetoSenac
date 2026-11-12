@@ -1,58 +1,44 @@
-
 import Link from "next/link";
-import Cabecalho from "../../components/Cabecalho";
-import Rodape from "../../components/Rodape";
-import Cartao from "../../components/Cartao";
-import { Projeto } from "../../components/Dados";
+import { projetos } from "@/componentes/Dados";
 
-export default function Projetos() {
+export default function ProjetosPage() {
   return (
-    <>
-      <Cabecalho />
+    <main className="conteudo">
+      <section className="secao">
+        <h1>Meus Projetos</h1>
+        <p>Confira os sistemas e aplicações que desenvolvi.</p>
 
-      <main className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grade">
+          {projetos.map((projeto) => (
+            <article key={projeto.id} className="cartao">
+              <h3>{projeto.titulo}</h3>
+              <p>{projeto.descricao}</p>
 
-        <h1 className="text-4xl font-bold mb-8">
-          Meus projetos
-        </h1>
+              <div className="tecnologias">
+                {projeto.tecnologias?.map((tech, index) => (
+                  <span key={index} className="tag">
+                    {tech}
+                  </span>
+                ))}
+              </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          {Projeto.map((item) => (
-            <Cartao
-              key={item.id}
-              titulo={item.titulo}
-              descricao={item.descricao}
-            >
-              <p className="my-4 text-sm">
-                {item.tecnologias.join(" • ")}
-              </p>
-
-              <Link
-                href={`/projetos/${item.id}`}
-                className="text-blue-600 underline"
-              >
-                Ver detalhes
-              </Link>
-
-              <br />
-
-              <a
-                href={item.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline"
-              >
-                GitHub
-              </a>
-            </Cartao>
+              <div className="acoes">
+                <a
+                  href={projeto.github || "https://github.com/Will2522"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="botao"
+                >
+                  Ver GitHub
+                </a>
+                <Link href={`/projetos/${projeto.id}`} className="botao">
+                  Ver detalhes
+                </Link>
+              </div>
+            </article>
           ))}
-
         </div>
-
-      </main>
-
-      <Rodape />
-    </>
+      </section>
+    </main>
   );
 }
