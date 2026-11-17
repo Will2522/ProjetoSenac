@@ -10,8 +10,8 @@ import ListaTarefas from "@/componentes/ListaTarefas";
 import { projetos } from "@/componentes/Dados";
 import BuscarCepForm from "@/app/BuscarCepForm";
 
-  
- 
+
+
 export default function Home() {
   return (
     <>
@@ -33,20 +33,20 @@ export default function Home() {
 
           <div className="flex flex-wrap gap-4">
 
-            
-  <main style={{ padding: "2rem", fontFamily: "sans-serif", maxWidth: "800px", margin: "0 auto" }}>
-      <h1>Meu Portal</h1>
-      
-      <div style={{ margin: "20px 0" }}>
-        <Link href="/github" className="botao">
-          Ver meus Repositórios do GitHub 
-        </Link>
-      </div>
 
-      <hr style={{ margin: "32px 0" }} />
+            <main style={{ padding: "2rem", fontFamily: "sans-serif", maxWidth: "800px", margin: "0 auto" }}>
+              <h1>Meu Portal</h1>
 
-      <BuscarCepForm />
-    </main>
+              <div style={{ margin: "20px 0" }}>
+                <Link href="/github" className="botao">
+                  Ver meus Repositórios do GitHub
+                </Link>
+              </div>
+
+              <hr style={{ margin: "32px 0" }} />
+
+              <BuscarCepForm />
+            </main>
           </div>
 
         </section>

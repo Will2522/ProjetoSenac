@@ -1,6 +1,6 @@
-import { fetchGithubUserRepos } from "@/lib/githubApi";
+import { fetchGithubUserRepos } from "../lib/githubApi";
 
-export async function obterRepositorios(usuario) {
+export async function obterRepositorios(usuario: string) {
   try {
     const resposta = await fetchGithubUserRepos(usuario);
 

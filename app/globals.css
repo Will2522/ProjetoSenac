@@ -1,13 +1,13 @@
 :root {
-  --bg-principal: #09090b;      
+  --bg-principal: #09090b;
   --bg-secundario: #121217;
-  --bg-hover: #1e1b2e;      
-  --roxo-primario: #8b5cf6;    
-  --roxo-hover: #7c3aed;   
-  --roxo-claro: #c4b5fd;       
-  --texto-principal: #f8fafc;   
-  --texto-secundario: #a1a1aa;  
-  --borda: #27272a;             
+  --bg-hover: #1e1b2e;
+  --roxo-primario: #8b5cf6;
+  --roxo-hover: #7c3aed;
+  --roxo-claro: #c4b5fd;
+  --texto-principal: #f8fafc;
+  --texto-secundario: #a1a1aa;
+  --borda: #27272a;
   --borda-roxa: rgba(139, 92, 246, 0.35);
 }
 
@@ -284,6 +284,7 @@ footer {
 
 
 @media (max-width: 700px) {
+
   .cabecalho,
   header {
     flex-direction: column;
@@ -307,8 +308,8 @@ header {
 }
 
 
-.cabecalho > div,
-header > div,
+.cabecalho>div,
+header>div,
 .menu,
 nav {
   display: flex;
@@ -319,8 +320,8 @@ nav {
 }
 
 
-header > div:only-child,
-.cabecalho > div:only-child {
+header>div:only-child,
+.cabecalho>div:only-child {
   width: 100%;
   display: flex;
   justify-content: space-between;
