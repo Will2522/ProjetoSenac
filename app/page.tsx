@@ -89,6 +89,7 @@ export default function Home() {
                       className="text-blue-600 underline"
                     >
                       Ver detalhes
+                      
                     </Link>
                   </div>
                 </div>
