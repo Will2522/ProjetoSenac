@@ -16,6 +16,7 @@ export default function Contato() {
   const [sucesso, setSucesso] = useState("");
   const [carregando, setCarregando] = useState(false);
 
+  console.log("Teste de brench1");
   async function enviar(e) {
     e.preventDefault();
 
