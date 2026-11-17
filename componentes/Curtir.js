@@ -6,6 +6,7 @@ import { useState } from "react";
 export default function Curtir() {
   const [curtidas, setCurtidas] = useState(0);
 
+console.log("Teste de brench2");
   return (
     <button
       onClick={() => setCurtidas(curtidas + 1)}
